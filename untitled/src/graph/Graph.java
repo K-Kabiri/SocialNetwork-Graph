@@ -1,12 +1,6 @@
 package graph;
 
-import edge.Edge;
-import position.Position;
 import position.PositionalList;
-import vertex.Vertex;
-
-import java.util.Map;
-import java.util.Set;
 
 interface Graph<V, E> {
     int numVertices();
@@ -19,9 +13,9 @@ interface Graph<V, E> {
 
     int outDegree(Vertex<V> v);
 
-    Iterable<Edge<E>> outgoingEdges(Vertex<V> v);
-
     int inDegree(Vertex<V> v);
+
+    Iterable<Edge<E>> outgoingEdges(Vertex<V> v);
 
     Iterable<Edge<E>> incomingEdges(Vertex<V> v);
 
@@ -36,6 +30,4 @@ interface Graph<V, E> {
     Edge<E> insertEdge(Vertex<V> u, Vertex<V> v, E element) throws IllegalArgumentException;
 
     void removeVertex(Vertex<V> v);
-
-    //void DFS(Vertex<V> u, Set<Vertex<V>> known, Map<Vertex<V>, Edge<E>> forest);
 }
