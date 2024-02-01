@@ -69,7 +69,7 @@ public class LinkedInPanel {
                     printSuggestions(sortedSuggestionsWithPriority(),"Suggestions with priority");
                 }
                 case 5 -> {
-                    //suggestion
+                    printSuggestions(suggestionWithOrder(),"Suggestions with specific order");
                 }
             }
             printUserMenu();
@@ -85,7 +85,7 @@ public class LinkedInPanel {
                 [2] Update information
                 [3] Suggestions with level
                 [4] Suggestions with priority
-                [5] Suggestions with specific feature
+                [5] Suggestions with specific order
                 [6] Back
                 """);
     }
@@ -219,4 +219,45 @@ public class LinkedInPanel {
         return userPanel.prioritize(suggestionWithLevel());
     }
 
+    //--------------------------------------------------------------------------------------------------------
+
+    /*
+       This method returns list of suggestion users with input priority.
+     */
+    public ArrayList<Connection> suggestionWithOrder(){
+        System.out.println("Enter your priorities in order : [ dateOfBirth , universityLocation , field , workplace , a skill ]");
+        String input=sc.next();
+        String[] str=input.split(" ");
+        ArrayList<String> order = new ArrayList<>(List.of(str));
+
+        int indexOfUniversityLocation=order.indexOf("universityLocation");
+        int indexOfField=order.indexOf("field");
+        int indexOfWorkplace=order.indexOf("workplace");
+        int indexOfSkill=6-(indexOfWorkplace+indexOfField+indexOfUniversityLocation);
+
+        return prioritize(suggestionWithLevel(),indexOfUniversityLocation,indexOfField,indexOfWorkplace,indexOfSkill,str[indexOfSkill]);
+
+    }
+
+    /*
+       This method uses for prioritizing input features.
+     */
+    public  ArrayList<Connection> prioritize(ArrayList<Connection> connections,int indexOfUniversityLocation,int indexOfField,int indexOfWorkplace,int indexOfSkill,String skill)
+    {
+        for(Connection ptr : connections)
+        {
+            if(ptr.getUser().getField().compareTo(this.currentUser.getElement().getField())==0)
+                ptr.setValue(ptr.getValue()+(5-indexOfField));
+            if (ptr.getUser().getSpecialties().contains(skill))
+                    ptr.setValue(ptr.getValue()+(5-indexOfSkill));
+
+            if(ptr.getUser().getUniversityLocation().compareTo(this.currentUser.getElement().getUniversityLocation())==0)
+                ptr.setValue(ptr.getValue()+(5-indexOfUniversityLocation));
+            if(ptr.getUser().getWorkplace().compareTo(this.currentUser.getElement().getWorkplace())==0)
+                ptr.setValue(ptr.getValue()+(5-indexOfWorkplace));
+
+        }
+        Collections.sort(connections,Connection::compareTo);
+        return connections;
+    }
 }

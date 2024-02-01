@@ -103,7 +103,7 @@ public class User {
         return
                         "ID : " + id + "\n" +
                         "NAME : " + name + "\n" +
-                        "DATE OF BIRTHDAY : " + dateOfBirth + "\n" +
+                        "DATE OF BIRTHDAY : " + dateOfBirth.toString() + "\n" +
                         "UNIVERSITY LOCATION : " + universityLocation + "\n" +
                         "FIELD : " + field + "\n" +
                         "WORK PLACE : " + workplace + "\n" +
