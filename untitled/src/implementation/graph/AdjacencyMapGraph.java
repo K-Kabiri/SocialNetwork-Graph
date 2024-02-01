@@ -3,6 +3,8 @@ package implementation.graph;
 import implementation.position.LinkedPositionalList;
 import implementation.position.Position;
 import implementation.position.PositionalList;
+import linkedIn.model.Connection;
+import linkedIn.model.User;
 
 import java.util.*;
 
@@ -222,13 +224,13 @@ public class AdjacencyMapGraph<V, E> implements Graph<V, E> {
     }
 
     private InnerVertex<V> validate(Vertex<V> v) throws IllegalArgumentException {
-        if (!(v instanceof InnerVertex<V> vert)) throw new IllegalArgumentException("invalid vertex");
+        //if (!(v instanceof InnerVertex<V> vert)) throw new IllegalArgumentException("invalid vertex");
         //if(!vertices.contains(vert)) throw new IllegalArgumentException("vertex is not in the list");
         return (InnerVertex<V>) v;
     }
 
     private InnerEdge<E> validate(Edge<E> e) throws IllegalArgumentException {
-        if (!(e instanceof InnerEdge<E> edge)) throw new IllegalArgumentException("invalid edge");
+        //if (!(e instanceof InnerEdge<E> edge)) throw new IllegalArgumentException("invalid edge");
         //if(!edges.contains(edge)) throw new IllegalArgumentException("edge is not in the list");
         return (InnerEdge<E>) e;
     }
@@ -271,29 +273,30 @@ public class AdjacencyMapGraph<V, E> implements Graph<V, E> {
         performs breath-first search of graph starting at vertex
      */
 
-    public void BFS(Vertex<V> u, Set<Vertex<V>> known, Map<Vertex<V>, Edge<E>> forest) {
+    public void BFS(Vertex<V> u, Set<Vertex<V>> known, Map<Vertex<V>, Integer> connections) {
         PositionalList<Vertex<V>> level = new LinkedPositionalList<>();
         known.add(u);
+        int index = 1 ;
         // first level includes only u
         level.addLast(u);
-        while (!level.isEmpty()) {
+        while (!level.isEmpty() && index<=5) {
             PositionalList<Vertex<V>> nextLevel = new LinkedPositionalList<>();
             for (Vertex<V> vertex : level) {
                 for (Edge<E> edge : this.outgoingEdges(vertex)) {
-                    Vertex<V> v = this.opposite(vertex, edge);
+                    Vertex<V>v = this.opposite(vertex, edge);
                     if (!known.contains(v)) {
                         known.add(v);
                         // edge is the tree edge that discovered v
-                        forest.put(v, edge);
+                        connections.put(v, index);
                         // v will be further considered in next pass
                         nextLevel.addLast(v);
                     }
                 }
                 level = nextLevel;
             }
+            index++;
         }
     }
-
     public PositionalList<Edge<E>> constructPath(Vertex<V> u, Vertex<V> v, Map<Vertex<V>, Edge<E>> forest) {
         PositionalList<Edge<E>> path = new LinkedPositionalList<>();
         // v was discovered during the search

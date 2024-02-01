@@ -3,6 +3,7 @@ package implementation.graph;
 import implementation.position.LinkedPositionalList;
 import implementation.position.Position;
 import implementation.position.PositionalList;
+import jdk.jshell.EvalException;
 
 public class EdgeList<V, E> implements Graph<V, E> {
 
@@ -117,12 +118,14 @@ public class EdgeList<V, E> implements Graph<V, E> {
         int outDegree = 0;
         if (!isDirected) {
             for (Edge<E> e : edges) {
-                if ((e instanceof InnerEdge<E> edge) && ((edge.endpoints[0].equals(v)) || (edge.endpoints[1].equals(v))))
+                InnerEdge<E> edge = validate(e);
+                if (((edge.endpoints[0].equals(v)) || (edge.endpoints[1].equals(v))))
                     outDegree++;
             }
         } else {
             for (Edge<E> e : edges) {
-                if ((e instanceof InnerEdge<E> edge) && (edge.endpoints[0].equals(v)))
+                InnerEdge<E> edge = validate(e);
+                if ((edge.endpoints[0].equals(v)))
                     outDegree++;
             }
         }
@@ -134,12 +137,14 @@ public class EdgeList<V, E> implements Graph<V, E> {
         int inDegree = 0;
         if (!isDirected) {
             for (Edge<E> e : edges) {
-                if ((e instanceof InnerEdge<E> edge) && ((edge.endpoints[0].equals(v)) || (edge.endpoints[1].equals(v))))
+                InnerEdge<E> edge = validate(e);
+                if (((edge.endpoints[0].equals(v)) || (edge.endpoints[1].equals(v))))
                     inDegree++;
             }
         } else {
             for (Edge<E> e : edges) {
-                if ((e instanceof InnerEdge<E> edge) && (edge.endpoints[1].equals(v)))
+                InnerEdge<E> edge = validate(e);
+                if ((edge.endpoints[1].equals(v)))
                     inDegree++;
             }
         }
@@ -152,12 +157,14 @@ public class EdgeList<V, E> implements Graph<V, E> {
         PositionalList<Edge<E>> out = new LinkedPositionalList<>();
         if (!isDirected) {
             for (Edge<E> e : edges) {
-                if ((e instanceof InnerEdge<E> edge) && ((edge.endpoints[0].equals((v)) || (edge.endpoints[1].equals(v)))))
+                InnerEdge<E> edge = validate(e);
+                if (((edge.endpoints[0].equals((v)) || (edge.endpoints[1].equals(v)))))
                     out.addLast(e);
             }
         } else {
             for (Edge<E> e : edges) {
-                if ((e instanceof InnerEdge<E> edge) && (edge.endpoints[0].equals(v)))
+                InnerEdge<E> edge = validate(e);
+                if ((edge.endpoints[0].equals(v)))
                     out.addLast(e);
             }
         }
@@ -169,12 +176,14 @@ public class EdgeList<V, E> implements Graph<V, E> {
         PositionalList<Edge<E>> in = new LinkedPositionalList<>();
         if (!isDirected) {
             for (Edge<E> e : edges) {
-                if ((e instanceof InnerEdge<E> edge) && ((edge.endpoints[0].equals(v)) || (edge.endpoints[1].equals(v))))
+                InnerEdge<E> edge = validate(e);
+                if (((edge.endpoints[0].equals(v)) || (edge.endpoints[1].equals(v))))
                     in.addLast(e);
             }
         } else {
             for (Edge<E> e : edges) {
-                if ((e instanceof InnerEdge<E> edge) && (edge.endpoints[1].equals(v)))
+                InnerEdge<E> edge = validate(e);
+                if ((edge.endpoints[1].equals(v)))
                     in.addLast(e);
             }
         }
@@ -186,19 +195,21 @@ public class EdgeList<V, E> implements Graph<V, E> {
         // search in edges list to find the edge with inputs vertex.
         if (!isDirected) {
             for (Edge<E> e : this.edges) {
-                if ((e instanceof InnerEdge<E> edge)) {
+                InnerEdge<E> edge = validate(e);
+                //if ((e instanceof InnerEdge<E> edge)) {
                     if ((edge.endpoints[0].equals(v) && edge.endpoints[1].equals(u)) || (edge.endpoints[0].equals(u) && edge.endpoints[1].equals(v))) {
                         return edge;
                     }
-                }
+                //}
             }
         } else {
             for (Edge<E> e : this.edges) {
-                if ((e instanceof InnerEdge<E> edge)) {
+                InnerEdge<E> edge = validate(e);
+          //      if ((e instanceof InnerEdge<E> edge)) {
                     if (edge.endpoints[0].equals(v) && edge.endpoints[1].equals(u)) {
                         return edge;
                     }
-                }
+                //}
             }
         }
         return null;
@@ -208,7 +219,8 @@ public class EdgeList<V, E> implements Graph<V, E> {
     public Vertex<V>[] endVertices(Edge<E> e) {
         // search in edges list to find the endpoints of the input edge.
         for (Edge<E> edge : this.edges) {
-            if (edge.equals(e) && (e instanceof InnerEdge<E> ie)) {
+            InnerEdge<E> ie = validate(edge);
+            if (edge.equals(e)) {
                 return ie.getEndpoints();
             }
         }
@@ -219,7 +231,8 @@ public class EdgeList<V, E> implements Graph<V, E> {
     public Vertex<V> opposite(Vertex<V> v, Edge<E> e) throws IllegalArgumentException {
         // search in edges list to find the opposite vertex.
         for (Edge<E> edge : this.edges) {
-            if (edge.equals(e) && (e instanceof InnerEdge<E> ie)) {
+            InnerEdge<E> ie = validate(edge);
+            if (edge.equals(e)) {
                 if (ie.endpoints[0].equals(v)) {
                     return ie.endpoints[1];
                 } else if (ie.endpoints[1].equals(v)) {
@@ -248,7 +261,8 @@ public class EdgeList<V, E> implements Graph<V, E> {
     public void removeVertex(Vertex<V> v) {
         InnerVertex<V> innerVertex = validate(v);
         for (Edge<E> e : edges) {
-            if ((e instanceof InnerEdge<E> edge) && ((edge.endpoints[0].equals(innerVertex)) || (edge.endpoints[1].equals(innerVertex)))) {
+            InnerEdge<E> edge = validate(e);
+            if (((edge.endpoints[0].equals(innerVertex)) || (edge.endpoints[1].equals(innerVertex)))) {
                 removeEdge(e);
             }
         }
@@ -262,13 +276,13 @@ public class EdgeList<V, E> implements Graph<V, E> {
     }
 
     private InnerVertex<V> validate(Vertex<V> v) throws IllegalArgumentException {
-        if (!(v instanceof InnerVertex<V> vert)) throw new IllegalArgumentException("invalid vertex");
+        //if (!(v instanceof InnerVertex<V> vert)) throw new IllegalArgumentException("invalid vertex");
         //if(!vertices.contains(vert)) throw new IllegalArgumentException("vertex is not in the list");
         return (InnerVertex<V>) v;
     }
 
     private InnerEdge<E> validate(Edge<E> e) throws IllegalArgumentException {
-        if (!(e instanceof InnerEdge<E> edge)) throw new IllegalArgumentException("invalid edge");
+       // if (!(e instanceof InnerEdge<E> edge)) throw new IllegalArgumentException("invalid edge");
         //if(!edges.contains(edge)) throw new IllegalArgumentException("edge is not in the list");
         return (InnerEdge<E>) e;
     }

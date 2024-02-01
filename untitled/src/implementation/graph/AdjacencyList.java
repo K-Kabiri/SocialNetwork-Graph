@@ -125,13 +125,13 @@ public class AdjacencyList<V,E> implements Graph<V,E> {
     }
     // ----------------- validation --------------------
     private InnerVertex<V> validate(Vertex<V> v) throws IllegalArgumentException {
-        if (!(v instanceof InnerVertex<V> vert)) throw new IllegalArgumentException("invalid vertex");
+        //if (!(v instanceof InnerVertex<V> vert)) throw new IllegalArgumentException("invalid vertex");
         //if(!vertices.contains(vert)) throw new IllegalArgumentException("vertex is not in the list");
         return (InnerVertex<V>) v;
     }
 
     private InnerEdge<E> validate(Edge<E> e) throws IllegalArgumentException {
-        if (!(e instanceof InnerEdge<E> edge)) throw new IllegalArgumentException("invalid edge");
+        //if (!(e instanceof InnerEdge<E> edge)) throw new IllegalArgumentException("invalid edge");
         //if(!edges.contains(edge)) throw new IllegalArgumentException("edge is not in the list");
         return (InnerEdge<E>) e;
     }
@@ -188,16 +188,16 @@ public class AdjacencyList<V,E> implements Graph<V,E> {
     public Edge<E> getEdge(Vertex<V> v, Vertex<V> u) {
         InnerVertex<V> first = validate(v);
         for (Edge<E> pointer : first.getIncoming()) {
-            if (pointer instanceof InnerEdge<E>){
+           // if (pointer instanceof InnerEdge<E> p){
                 if(((InnerEdge<E>) pointer).getEndpoints()[0]==u)
                     return pointer;
-            }
+            //}
         }
         for (Edge<E> pointer : first.getOutgoing()) {
-            if (pointer instanceof InnerEdge<E>){
+            //if (pointer instanceof InnerEdge<E>){
                 if(((InnerEdge<E>) pointer).getEndpoints()[1]==u)
                     return pointer;
-            }
+          //  }
         }
         return null;
     }
