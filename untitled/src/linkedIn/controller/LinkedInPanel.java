@@ -2,17 +2,17 @@ package linkedIn.controller;
 
 import implementation.graph.AdjacencyMapGraph;
 import implementation.graph.Vertex;
+import linkedIn.model.Connection;
 import linkedIn.model.User;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class LinkedInPanel {
     private AdjacencyMapGraph<User, Integer> graph;
-    private User currentUser = null;
+    private Vertex<User> currentUser = null;
+    private UserPanel userPanel = null;
     private Scanner sc;
 
     public LinkedInPanel() {
@@ -102,10 +102,10 @@ public class LinkedInPanel {
      /*
       This method used for finding user with input id
      */
-    private User findUser(String id) {
+    private Vertex<User> findUser(String id) {
         for (Vertex<User> vertex : graph.vertices()) {
             if (vertex.getElement().getId().equals(id))
-                return vertex.getElement();
+                return vertex;
         }
         return null;
     }
@@ -116,8 +116,40 @@ public class LinkedInPanel {
         if (!checkID(id)) {
             return false;
         }
-        new UserPanel(findUser(id));
+        this.currentUser = findUser(id);
+        this.userPanel = new  UserPanel(currentUser);
         return true;
+    }
+    //====================================== list of connections (with level 1)=============================
+    public ArrayList<Connection> getConnection(){
+        Set<Vertex<User>> known = new HashSet<>();
+        Map<Vertex<User>,Integer> map = new HashMap<>();
+        graph.BFS(currentUser,known,map);
+        ArrayList<Connection> connections = new ArrayList<>();
+        for(Map.Entry<Vertex<User>, Integer> e : map.entrySet())
+        {
+            if(e.getValue() == 1)
+                connections.add(new Connection(e.getKey().getElement(),e.getValue()));
+        }
+        return connections;
+    }
+    // ========================== suggestion (further vertices) =====================================
+    public ArrayList<Connection> suggestionWithLevel(){
+        Set<Vertex<User>> known = new HashSet<>();
+        Map<Vertex<User>,Integer> map = new HashMap<>();
+        graph.BFS(currentUser,known,map);
+        ArrayList<Connection> suggestion = new ArrayList<>();
+        for(Map.Entry<Vertex<User>, Integer> e : map.entrySet())
+        {
+            if(e.getValue() != 1)
+                suggestion.add(new Connection(e.getKey().getElement(),e.getValue()));
+        }
+        return suggestion;
+    }
+    // ========================== suggest with priority ===========================
+    public ArrayList<Connection> sortedSuggestionsWithPriority()
+    {
+        return userPanel.prioritize(suggestionWithLevel());
     }
 
 }
