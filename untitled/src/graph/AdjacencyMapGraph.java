@@ -4,10 +4,7 @@ import position.LinkedPositionalList;
 import position.Position;
 import position.PositionalList;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class AdjacencyMapGraph<V, E> implements Graph<V, E> {
     // ------------------- innerVertex class ---------------------
@@ -95,8 +92,8 @@ public class AdjacencyMapGraph<V, E> implements Graph<V, E> {
             this.pos = pos;
         }
     }
+    //===============================================
     // -------------- Fields ------------------------
-
     private boolean isDirected;
     private PositionalList<Vertex<V>> vertices;
     private PositionalList<Edge<E>> edges;
@@ -118,7 +115,7 @@ public class AdjacencyMapGraph<V, E> implements Graph<V, E> {
 
     @Override
     public Iterable<Vertex<V>> vertices() {
-        return vertices; //
+        return vertices;
     }
 
     @Override
@@ -213,6 +210,7 @@ public class AdjacencyMapGraph<V, E> implements Graph<V, E> {
         vertices.remove(vert.getPos());
     }
 
+    @Override
     public void removeEdge(Edge<E> e) {
         InnerEdge<E> edge = validate(e);
         Vertex<V>[] endpoints = edge.getEndpoints();

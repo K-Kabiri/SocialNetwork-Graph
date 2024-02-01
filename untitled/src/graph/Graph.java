@@ -30,4 +30,5 @@ interface Graph<V, E> {
     Edge<E> insertEdge(Vertex<V> u, Vertex<V> v, E element) throws IllegalArgumentException;
 
     void removeVertex(Vertex<V> v);
+    void removeEdge(Edge<E> e);
 }
