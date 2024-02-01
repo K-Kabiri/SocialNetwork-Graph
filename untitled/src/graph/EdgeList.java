@@ -249,7 +249,7 @@ public class EdgeList<V, E> implements Graph<V, E> {
 
     @Override
     public void removeVertex(Vertex<V> v) {
-        InnerVertex<V> innerVertex = (InnerVertex<V>) v;
+        InnerVertex<V> innerVertex = validate(v);
         for (Edge<E> e : edges) {
             if ((e instanceof InnerEdge<E> edge) && ((edge.endpoints[0].equals(innerVertex)) || (edge.endpoints[1].equals(innerVertex)))) {
                 removeEdge(e);
@@ -260,7 +260,19 @@ public class EdgeList<V, E> implements Graph<V, E> {
 
     @Override
     public void removeEdge(Edge<E> e) {
-        InnerEdge<E> innerEdge=(InnerEdge<E>) e;
+        InnerEdge<E> innerEdge=validate(e);
         edges.remove(innerEdge.getPos());
+    }
+
+    private InnerVertex<V> validate(Vertex<V> v) throws IllegalArgumentException {
+        if (!(v instanceof InnerVertex<V> vert)) throw new IllegalArgumentException("invalid vertex");
+        //if(!vertices.contains(vert)) throw new IllegalArgumentException("vertex is not in the list");
+        return (InnerVertex<V>) v;
+    }
+
+    private InnerEdge<E> validate(Edge<E> e) throws IllegalArgumentException {
+        if (!(e instanceof InnerEdge<E> edge)) throw new IllegalArgumentException("invalid edge");
+        //if(!edges.contains(edge)) throw new IllegalArgumentException("edge is not in the list");
+        return (InnerEdge<E>) e;
     }
 }
