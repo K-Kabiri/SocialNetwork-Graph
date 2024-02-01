@@ -246,10 +246,10 @@ public class AdjacencyMatrix<V,E> implements Graph<V,E> {
         removeRowAndColumn(graph,index,index);
         vertices.remove(index);
     }
-    public void removeEdge(InnerEdge e)
+    public void removeEdge(Edge<E> e)
     {
-        int index1 = vertices.indexOf(e.getEndpoints()[0]);
-        int index2 = vertices.indexOf(e.getEndpoints()[1]);
+        int index1 = vertices.indexOf(((InnerEdge<E>)e).getEndpoints()[0]);
+        int index2 = vertices.indexOf(((InnerEdge<E>)e).getEndpoints()[1]);
         graph[index1][index2] = null;
         graph[index2][index1]= null;
 
