@@ -20,7 +20,7 @@ public class LinkedInPanel {
         sc = new Scanner(System.in).useDelimiter("\n");
     }
 
-    private void start() {
+    public void start() {
         int command = sc.nextInt();
         while (true) {
             switch (command) {
@@ -32,6 +32,8 @@ public class LinkedInPanel {
                     if (!signIn()) {
                         System.out.println("Invalid ID!");
                         printMainMenu();
+                    } else {
+                        userManager();
                     }
                 }
                 case 3 -> System.exit(0);
@@ -40,12 +42,67 @@ public class LinkedInPanel {
         }
     }
 
-    public static void printMainMenu() {
+    private static void printMainMenu() {
         System.out.println("""
                 >[1] Sign up
                 >[2] Sign in
                 >[3] Exit
                 """);
+    }
+
+    //--------------------------------------------------------------
+    private void userManager() {
+        printUserMenu();
+        int command = sc.nextInt();
+        while (command != 6) {
+            switch (command) {
+                case 1 -> {
+                    printUserInformation();
+                }
+                case 2 -> {
+                    //update
+                }
+                case 3 -> {
+                    printSuggestions(suggestionWithLevel(),"Suggestions with level");
+                }
+                case 4 -> {
+                    printSuggestions(sortedSuggestionsWithPriority(),"Suggestions with priority");
+                }
+                case 5 -> {
+                    //suggestion
+                }
+            }
+            printUserMenu();
+            command = sc.nextInt();
+        }
+        printMainMenu();
+    }
+
+
+    private void printUserMenu() {
+        System.out.println("""
+                [1] Print information
+                [2] Update information
+                [3] Suggestions with level
+                [4] Suggestions with priority
+                [5] Suggestions with specific feature
+                [6] Back
+                """);
+    }
+
+    private void printSuggestions(ArrayList<Connection> suggestion,String string) {
+        System.out.println(">>>>> "+string+" <<<<<");
+        for (Connection c:suggestion){
+            System.out.println(c.getUser().toString());
+            System.out.println("------------------------------------------");
+        }
+    }
+
+    private void printUserInformation(){
+        System.out.println("===================================");
+        System.out.println(currentUser.toString());
+        System.out.println("===================================");
+
     }
 
     //----------------------------------------------------------------------
@@ -99,9 +156,9 @@ public class LinkedInPanel {
     }
     //----------------------------------------------------------------------
 
-     /*
-      This method used for finding user with input id
-     */
+    /*
+     This method used for finding user with input id
+    */
     private Vertex<User> findUser(String id) {
         for (Vertex<User> vertex : graph.vertices()) {
             if (vertex.getElement().getId().equals(id))
@@ -117,38 +174,48 @@ public class LinkedInPanel {
             return false;
         }
         this.currentUser = findUser(id);
-        this.userPanel = new  UserPanel(currentUser);
+        this.userPanel = new UserPanel(currentUser);
         return true;
     }
+
     //====================================== list of connections (with level 1)=============================
-    public ArrayList<Connection> getConnection(){
+    public ArrayList<Connection> getConnection() {
         Set<Vertex<User>> known = new HashSet<>();
-        Map<Vertex<User>,Integer> map = new HashMap<>();
-        graph.BFS(currentUser,known,map);
+        Map<Vertex<User>, Integer> map = new HashMap<>();
+        graph.BFS(currentUser, known, map);
         ArrayList<Connection> connections = new ArrayList<>();
-        for(Map.Entry<Vertex<User>, Integer> e : map.entrySet())
-        {
-            if(e.getValue() == 1)
-                connections.add(new Connection(e.getKey().getElement(),e.getValue()));
+        for (Map.Entry<Vertex<User>, Integer> e : map.entrySet()) {
+            if (e.getValue() == 1)
+                connections.add(new Connection(e.getKey().getElement(), e.getValue()));
         }
         return connections;
     }
+
     // ========================== suggestion (further vertices) =====================================
-    public ArrayList<Connection> suggestionWithLevel(){
+    public ArrayList<Connection> suggestionWithLevel() {
         Set<Vertex<User>> known = new HashSet<>();
-        Map<Vertex<User>,Integer> map = new HashMap<>();
-        graph.BFS(currentUser,known,map);
+        Map<Vertex<User>, Integer> map = new HashMap<>();
+        graph.BFS(currentUser, known, map);
         ArrayList<Connection> suggestion = new ArrayList<>();
-        for(Map.Entry<Vertex<User>, Integer> e : map.entrySet())
-        {
-            if(e.getValue() != 1)
-                suggestion.add(new Connection(e.getKey().getElement(),e.getValue()));
+        for (Map.Entry<Vertex<User>, Integer> e : map.entrySet()) {
+            if (e.getValue() != 1)
+                suggestion.add(new Connection(e.getKey().getElement(), e.getValue()));
         }
+        Collections.sort(suggestion, new Comparator<Connection>() {
+            @Override
+            public int compare(Connection o1, Connection o2) {
+                if (o1.getLevel()== o2.getLevel())
+                    return 0;
+                if (o1.getLevel()<o2.getLevel())
+                    return -1;
+                return 1;
+            }
+        });
         return suggestion;
     }
+
     // ========================== suggest with priority ===========================
-    public ArrayList<Connection> sortedSuggestionsWithPriority()
-    {
+    public ArrayList<Connection> sortedSuggestionsWithPriority() {
         return userPanel.prioritize(suggestionWithLevel());
     }
 

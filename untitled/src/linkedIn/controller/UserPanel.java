@@ -20,38 +20,8 @@ public class UserPanel {
     public UserPanel(Vertex<User> currentUser) {
         this.currentUser = currentUser;
         this.connections = new ArrayList<>();
-        sc=new Scanner(System.in);
-        userManager();
     }
 
-    private void userManager(){
-        printUserMenu();
-        int command=sc.nextInt();
-        while (true){
-            switch (command){
-                case 1->{
-                    //update
-                }
-                case 2->{
-                    //suggestion
-                }
-                case 3->{
-                    LinkedInPanel.printMainMenu();
-                }
-            }
-            printUserMenu();
-            command=sc.nextInt();
-        }
-    }
-
-
-    private void printUserMenu(){
-        System.out.println("""
-                    [1] Update information
-                    [2] Suggestions
-                    [3] Back
-                    """);
-    }
     // ================================ prioritize =================================
     // ===================== for vertices with connection ===========================
    public  ArrayList<Connection> prioritize(ArrayList<Connection> connections)

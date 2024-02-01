@@ -98,4 +98,32 @@ public class User {
         this.connectionId = connectionId;
     }
 
+    @Override
+    public String toString() {
+        return
+                        "ID : " + id + "\n" +
+                        "NAME : " + name + "\n" +
+                        "DATE OF BIRTHDAY : " + dateOfBirth + "\n" +
+                        "UNIVERSITY LOCATION : " + universityLocation + "\n" +
+                        "FIELD : " + field + "\n" +
+                        "WORK PLACE : " + workplace + "\n" +
+                        printSpecialties() + "\n" +
+                        printConnection()+"\n";
+    }
+
+    private String printSpecialties() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("SPECIALTIES -> ");
+        for (String str : specialties) {
+            stringBuilder.append(str).append(" * ");
+        }
+        return stringBuilder.toString();
+    }
+
+    private String printConnection() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("Connections ID -> ");
+        stringBuilder.append(connectionId.toString());
+        return stringBuilder.toString();
+    }
 }
