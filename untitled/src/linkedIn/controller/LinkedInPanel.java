@@ -115,7 +115,7 @@ public class LinkedInPanel {
         String id = sc.next();
         if (checkID(id)) {
             System.out.println("Invalid ID!");
-            signup();
+            start();
         } else {
             System.out.println("-> Enter your full name :");
             String name = sc.next();
