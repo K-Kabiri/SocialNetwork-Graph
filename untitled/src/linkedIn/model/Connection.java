@@ -20,10 +20,6 @@ public class Connection implements Comparable<Connection> {
         this.value = value;
     }
 
-    public int getLevel() {
-        return level;
-    }
-
     @Override
     public int compareTo(Connection c) {
          if(c.value > this.value)
@@ -40,5 +36,13 @@ public class Connection implements Comparable<Connection> {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
     }
 }

@@ -46,6 +46,7 @@ public class UserPanel {
                    counter++;
                ptr.setValue(((ptr.getValue()+1)*(counter+1)));
            }
+           ptr.setValue(ptr.getValue()/ (ptr.getLevel()+1));
        }
        Collections.sort(connections,Connection::compareTo);
        return connections;

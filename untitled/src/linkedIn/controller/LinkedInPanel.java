@@ -58,13 +58,22 @@ public class LinkedInPanel {
                     printUserInformation();
                 }
                 case 2 -> {
-                    printSuggestions(suggestionWithLevel(),"Suggestions with level");
+                    if(currentUser.getElement().getConnectionId().size() == 0)
+                        printSuggestions(zeroDegreeVConnections(),"Suggestions with level");
+                    else
+                        printSuggestions(suggestionWithLevel(),"Suggestions with level");
                 }
                 case 3 -> {
-                    printSuggestions(sortedSuggestionsWithPriority(),"Suggestions with priority");
+                    if(currentUser.getElement().getConnectionId().size() == 0)
+                        printSuggestions(zeroDegreeVConnections(),"Suggestions with level");
+                    else
+                        printSuggestions(sortedSuggestionsWithPriority(),"Suggestions with priority");
                 }
                 case 4 -> {
-                    printSuggestions(suggestionWithOrder(),"Suggestions with specific order");
+                    if(currentUser.getElement().getConnectionId().size() == 0)
+                        printSuggestions(zeroDegreeVConnections(),"Suggestions with level");
+                    else
+                        printSuggestions(suggestionWithOrder(),"Suggestions with specific order");
                 }
             }
             printUserMenu();
@@ -172,7 +181,35 @@ public class LinkedInPanel {
         this.userPanel = new UserPanel(currentUser);
         return true;
     }
-
+    // ==================================== make connections (add Edge) ==========================================
+    public void makeEdges(Map<String , Vertex<User>> userAndID)
+    {
+      for(Vertex<User> ptr : graph.vertices())
+      {
+          for(String ptrConnection : ptr.getElement().getConnectionId())
+          {
+              graph.insertEdge(ptr,userAndID.get(ptrConnection),0);
+          }
+      }
+    }
+    // ========================= all users ==============================
+   private ArrayList<User> allUsers(){
+        ArrayList<User> users = new ArrayList<>();
+        for(Vertex<User> user : graph.vertices())
+        {
+            users.add(user.getElement());
+        }
+        return users;
+    }
+    // ==================================== suggestion for vertex with 0 degree ============================
+    public ArrayList<Connection> zeroDegreeVConnections(){
+        ArrayList<Connection> result = new ArrayList<>();
+        for(User userPtr : allUsers())
+        {
+            result.add(new Connection(userPtr,0));
+        }
+       return userPanel.prioritize(result);
+    }
     //====================================== list of connections (with level 1)=============================
     public ArrayList<Connection> getConnection() {
         Set<Vertex<User>> known = new HashSet<>();
@@ -186,7 +223,7 @@ public class LinkedInPanel {
         return connections;
     }
 
-    // ========================== suggestion (further vertices) =====================================
+    // ========================== suggestion (further vertices) delete level 1 =====================================
     public ArrayList<Connection> suggestionWithLevel() {
         Set<Vertex<User>> known = new HashSet<>();
         Map<Vertex<User>, Integer> map = new HashMap<>();
@@ -255,4 +292,5 @@ public class LinkedInPanel {
         Collections.sort(connections,Connection::compareTo);
         return connections;
     }
+
 }
