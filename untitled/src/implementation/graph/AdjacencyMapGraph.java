@@ -253,7 +253,6 @@ public class AdjacencyMapGraph<V, E> implements Graph<V, E> {
      /*
        performs depth-first search of graph starting at vertex
      */
-
     public void DFS(Vertex<V> u, Set<Vertex<V>> known, Map<Vertex<V>, Edge<E>> forest) {
         // u has been discovered
         known.add(u);

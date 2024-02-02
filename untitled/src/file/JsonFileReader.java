@@ -1,4 +1,5 @@
 package file;
+import implementation.graph.Vertex;
 import linkedIn.controller.LinkedInPanel;
 import linkedIn.model.User;
 import org.json.simple.JSONArray;
@@ -11,14 +12,12 @@ import org.json.simple.parser.ParseException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 
 public class JsonFileReader {
     public void readFile()throws Exception{
+        Map<String , Vertex<User>> mapId = new HashMap<>();
         JSONParser parser = new JSONParser();
         try {
             JSONArray a = (JSONArray) parser.parse(new FileReader("social-network-eliix13/users.json"));
@@ -48,8 +47,7 @@ public class JsonFileReader {
                     set.add((String) c);
                 }
                 User newUser = new User(id,name, dateOfBirth,universityLocation,field,workplace,list,set);
-                LinkedInPanel.graph.insertVertex(newUser);
-
+                mapId.put(id,LinkedInPanel.graph.insertVertex(newUser));
             }
         } catch (IOException | ParseException e) {
             throw new RuntimeException(e);
