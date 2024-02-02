@@ -121,9 +121,12 @@ public class User {
     }
 
     private String printConnection() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("Connections ID -> ");
-        stringBuilder.append(connectionId.toString());
-        return stringBuilder.toString();
+        if (connectionId!=null) {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append("Connections ID -> ");
+            stringBuilder.append(connectionId.toString());
+            return stringBuilder.toString();
+        }
+        return "No connection!";
     }
 }

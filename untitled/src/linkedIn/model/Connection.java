@@ -23,11 +23,11 @@ public class Connection implements Comparable<Connection> {
     @Override
     public int compareTo(Connection c) {
          if(c.value > this.value)
-             return -1;
+             return 1;
          else if(c.value == this.value)
              return 0;
          else
-             return 1;
+             return -1;
     }
 
     public User getUser() {

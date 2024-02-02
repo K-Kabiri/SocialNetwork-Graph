@@ -4,11 +4,12 @@ import implementation.graph.AdjacencyMapGraph;
 import implementation.graph.Vertex;
 import linkedIn.model.Connection;
 import linkedIn.model.User;
+
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class LinkedInPanel {
-    public static AdjacencyMapGraph<User, Integer> graph=new AdjacencyMapGraph<>(false);
+    public static AdjacencyMapGraph<User, Integer> graph = new AdjacencyMapGraph<>(false);
     private Vertex<User> currentUser = null;
     private UserPanel userPanel = null;
     private Scanner sc;
@@ -24,7 +25,6 @@ public class LinkedInPanel {
             switch (command) {
                 case 1 -> {
                     signup();
-                    printMainMenu();
                 }
                 case 2 -> {
                     if (!signIn()) {
@@ -58,22 +58,22 @@ public class LinkedInPanel {
                     printUserInformation();
                 }
                 case 2 -> {
-                    if(currentUser.getElement().getConnectionId().size() == 0)
-                        printSuggestions(zeroDegreeVConnections(),"Suggestions with level");
+                    if (currentUser.getElement().getConnectionId().size() == 0)
+                        printSuggestions(zeroDegreeVConnections(), "Suggestions with level");
                     else
-                        printSuggestions(suggestionWithLevel(),"Suggestions with level");
+                        printSuggestions(suggestionWithLevel(), "Suggestions with level");
                 }
                 case 3 -> {
-                    if(currentUser.getElement().getConnectionId().size() == 0)
-                        printSuggestions(zeroDegreeVConnections(),"Suggestions with level");
+                    if (currentUser.getElement().getConnectionId().size() == 0)
+                        printSuggestions(zeroDegreeVConnections(), "Suggestions with level");
                     else
-                        printSuggestions(sortedSuggestionsWithPriority(),"Suggestions with priority");
+                        printSuggestions(sortedSuggestionsWithPriority(), "Suggestions with priority");
                 }
                 case 4 -> {
-                    if(currentUser.getElement().getConnectionId().size() == 0)
-                        printSuggestions(zeroDegreeVConnections(),"Suggestions with level");
+                    if (currentUser.getElement().getConnectionId().size() == 0)
+                        printSuggestions(zeroDegreeVConnections(), "Suggestions with level");
                     else
-                        printSuggestions(suggestionWithOrder(),"Suggestions with specific order");
+                        printSuggestions(suggestionWithOrder(), "Suggestions with specific order");
                 }
             }
             printUserMenu();
@@ -93,16 +93,21 @@ public class LinkedInPanel {
                 """);
     }
 
-    private void printSuggestions(ArrayList<Connection> suggestion,String string) {
-        System.out.println(">>>>> "+string+" <<<<<");
-        for (Connection c:suggestion){
-           // System.out.println(c.getUser().toString());
-            System.out.println("ID : "+c.getUser().getId());
-            System.out.println("-------------------");
+    private void printSuggestions(ArrayList<Connection> suggestion, String string) {
+        System.out.println(">>>>> " + string + " <<<<<");
+        int counter = 0;
+        for (Connection c : suggestion) {
+            if (counter == 20)
+                break;
+            else {
+                System.out.println(c.getUser().toString());
+                System.out.println("--------------------------");
+            }
+            counter++;
         }
     }
 
-    private void printUserInformation(){
+    private void printUserInformation() {
         System.out.println("===================================");
         System.out.println(currentUser.getElement().toString());
         System.out.println("===================================");
@@ -138,7 +143,7 @@ public class LinkedInPanel {
             String[] string = specialties.split(" ");
             List<String> list = new ArrayList<>(List.of(string));
 
-            User newUser = new User(id, name, birth, universityLocation, field, workplace, list, null);
+            User newUser = new User(id, name, birth, universityLocation, field, workplace, list, new HashSet<>());
             graph.insertVertex(newUser);
 
             System.out.println("You Signup Successfully!");
@@ -181,35 +186,34 @@ public class LinkedInPanel {
         this.userPanel = new UserPanel(currentUser);
         return true;
     }
+
     // ==================================== make connections (add Edge) ==========================================
-    public void makeEdges(Map<String , Vertex<User>> userAndID)
-    {
-      for(Vertex<User> ptr : graph.vertices())
-      {
-          for(String ptrConnection : ptr.getElement().getConnectionId())
-          {
-              graph.insertEdge(ptr,userAndID.get(ptrConnection),0);
-          }
-      }
+    public static void makeEdges(Map<String, Vertex<User>> userAndID) {
+        for (Vertex<User> ptr : graph.vertices()) {
+            for (String ptrConnection : ptr.getElement().getConnectionId()) {
+                graph.insertEdge(ptr, userAndID.get(ptrConnection), 0);
+            }
+        }
     }
+
     // ========================= all users ==============================
-   private ArrayList<User> allUsers(){
+    private ArrayList<User> allUsers() {
         ArrayList<User> users = new ArrayList<>();
-        for(Vertex<User> user : graph.vertices())
-        {
+        for (Vertex<User> user : graph.vertices()) {
             users.add(user.getElement());
         }
         return users;
     }
+
     // ==================================== suggestion for vertex with 0 degree ============================
-    public ArrayList<Connection> zeroDegreeVConnections(){
+    public ArrayList<Connection> zeroDegreeVConnections() {
         ArrayList<Connection> result = new ArrayList<>();
-        for(User userPtr : allUsers())
-        {
-            result.add(new Connection(userPtr,0));
+        for (User userPtr : allUsers()) {
+            result.add(new Connection(userPtr, 0));
         }
-       return userPanel.prioritize(result);
+        return userPanel.prioritize(result);
     }
+
     //====================================== list of connections (with level 1)=============================
     public ArrayList<Connection> getConnection() {
         Set<Vertex<User>> known = new HashSet<>();
@@ -236,9 +240,9 @@ public class LinkedInPanel {
         Collections.sort(suggestion, new Comparator<Connection>() {
             @Override
             public int compare(Connection o1, Connection o2) {
-                if (o1.getLevel()== o2.getLevel())
+                if (o1.getLevel() == o2.getLevel())
                     return 0;
-                if (o1.getLevel()<o2.getLevel())
+                if (o1.getLevel() < o2.getLevel())
                     return -1;
                 return 1;
             }
@@ -256,40 +260,38 @@ public class LinkedInPanel {
     /*
        This method returns list of suggestion users with input priority.
      */
-    public ArrayList<Connection> suggestionWithOrder(){
-        System.out.println("Enter your priorities in order : [ dateOfBirth , universityLocation , field , workplace , a skill ]");
-        String input=sc.next();
-        String[] str=input.split(" ");
+    public ArrayList<Connection> suggestionWithOrder() {
+        System.out.println("Enter your priorities in order : [ universityLocation , field , workplace , a skill ]");
+        String input = sc.next();
+        String[] str = input.split(" ");
         ArrayList<String> order = new ArrayList<>(List.of(str));
 
-        int indexOfUniversityLocation=order.indexOf("universityLocation");
-        int indexOfField=order.indexOf("field");
-        int indexOfWorkplace=order.indexOf("workplace");
-        int indexOfSkill=6-(indexOfWorkplace+indexOfField+indexOfUniversityLocation);
+        int indexOfUniversityLocation = order.indexOf("universityLocation");
+        int indexOfField = order.indexOf("field");
+        int indexOfWorkplace = order.indexOf("workplace");
+        int indexOfSkill = 6 - (indexOfWorkplace + indexOfField + indexOfUniversityLocation);
 
-        return prioritize(suggestionWithLevel(),indexOfUniversityLocation,indexOfField,indexOfWorkplace,indexOfSkill,str[indexOfSkill]);
+        return prioritize(suggestionWithLevel(), indexOfUniversityLocation, indexOfField, indexOfWorkplace, indexOfSkill, str[indexOfSkill]);
 
     }
 
     /*
        This method uses for prioritizing input features.
      */
-    public  ArrayList<Connection> prioritize(ArrayList<Connection> connections,int indexOfUniversityLocation,int indexOfField,int indexOfWorkplace,int indexOfSkill,String skill)
-    {
-        for(Connection ptr : connections)
-        {
-            if(ptr.getUser().getField().compareTo(this.currentUser.getElement().getField())==0)
-                ptr.setValue(ptr.getValue()+(5-indexOfField));
+    public ArrayList<Connection> prioritize(ArrayList<Connection> connections, int indexOfUniversityLocation, int indexOfField, int indexOfWorkplace, int indexOfSkill, String skill) {
+        for (Connection ptr : connections) {
+            if (ptr.getUser().getField().compareTo(this.currentUser.getElement().getField()) == 0)
+                ptr.setValue(ptr.getValue() + (5 - indexOfField));
             if (ptr.getUser().getSpecialties().contains(skill))
-                    ptr.setValue(ptr.getValue()+(5-indexOfSkill));
+                ptr.setValue(ptr.getValue() + (5 - indexOfSkill));
 
-            if(ptr.getUser().getUniversityLocation().compareTo(this.currentUser.getElement().getUniversityLocation())==0)
-                ptr.setValue(ptr.getValue()+(5-indexOfUniversityLocation));
-            if(ptr.getUser().getWorkplace().compareTo(this.currentUser.getElement().getWorkplace())==0)
-                ptr.setValue(ptr.getValue()+(5-indexOfWorkplace));
+            if (ptr.getUser().getUniversityLocation().compareTo(this.currentUser.getElement().getUniversityLocation()) == 0)
+                ptr.setValue(ptr.getValue() + (5 - indexOfUniversityLocation));
+            if (ptr.getUser().getWorkplace().compareTo(this.currentUser.getElement().getWorkplace()) == 0)
+                ptr.setValue(ptr.getValue() + (5 - indexOfWorkplace));
 
         }
-        Collections.sort(connections,Connection::compareTo);
+        Collections.sort(connections, Connection::compareTo);
         return connections;
     }
 

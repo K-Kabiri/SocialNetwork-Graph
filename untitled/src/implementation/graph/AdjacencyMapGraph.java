@@ -188,9 +188,9 @@ public class AdjacencyMapGraph<V, E> implements Graph<V, E> {
 
     @Override
     public Edge<E> insertEdge(Vertex<V> u, Vertex<V> v, E element) throws IllegalArgumentException {
-        if (getEdge(u, v) != null) {
-            throw new IllegalArgumentException("Edge from u to v already exists!");
-        }
+//        if (getEdge(u, v) != null) {
+//            throw new IllegalArgumentException("Edge from u to v already exists!");
+//        }
         InnerEdge<E> edge = new InnerEdge<>(u, v, element);
         edge.setPos(edges.addLast(edge));
         InnerVertex<V> org = validate(u);

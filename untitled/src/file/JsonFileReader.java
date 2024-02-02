@@ -49,6 +49,7 @@ public class JsonFileReader {
                 User newUser = new User(id,name, dateOfBirth,universityLocation,field,workplace,list,set);
                 mapId.put(id,LinkedInPanel.graph.insertVertex(newUser));
             }
+            LinkedInPanel.makeEdges(mapId);
         } catch (IOException | ParseException e) {
             throw new RuntimeException(e);
         }
