@@ -4,23 +4,21 @@ import implementation.graph.AdjacencyMapGraph;
 import implementation.graph.Vertex;
 import linkedIn.model.Connection;
 import linkedIn.model.User;
-
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class LinkedInPanel {
-    private AdjacencyMapGraph<User, Integer> graph;
+    public static AdjacencyMapGraph<User, Integer> graph=new AdjacencyMapGraph<>(false);
     private Vertex<User> currentUser = null;
     private UserPanel userPanel = null;
     private Scanner sc;
 
     public LinkedInPanel() {
-        graph = new AdjacencyMapGraph<>(false);
         sc = new Scanner(System.in).useDelimiter("\n");
     }
 
     public void start() {
+        printMainMenu();
         int command = sc.nextInt();
         while (true) {
             switch (command) {
@@ -31,13 +29,13 @@ public class LinkedInPanel {
                 case 2 -> {
                     if (!signIn()) {
                         System.out.println("Invalid ID!");
-                        printMainMenu();
                     } else {
                         userManager();
                     }
                 }
                 case 3 -> System.exit(0);
             }
+            printMainMenu();
             command = sc.nextInt();
         }
     }
@@ -54,53 +52,50 @@ public class LinkedInPanel {
     private void userManager() {
         printUserMenu();
         int command = sc.nextInt();
-        while (command != 6) {
+        while (command != 5) {
             switch (command) {
                 case 1 -> {
                     printUserInformation();
                 }
                 case 2 -> {
-                    //update
-                }
-                case 3 -> {
                     printSuggestions(suggestionWithLevel(),"Suggestions with level");
                 }
-                case 4 -> {
+                case 3 -> {
                     printSuggestions(sortedSuggestionsWithPriority(),"Suggestions with priority");
                 }
-                case 5 -> {
+                case 4 -> {
                     printSuggestions(suggestionWithOrder(),"Suggestions with specific order");
                 }
             }
             printUserMenu();
             command = sc.nextInt();
         }
-        printMainMenu();
+        start();
     }
 
 
     private void printUserMenu() {
         System.out.println("""
                 [1] Print information
-                [2] Update information
-                [3] Suggestions with level
-                [4] Suggestions with priority
-                [5] Suggestions with specific order
-                [6] Back
+                [2] Suggestions with level
+                [3] Suggestions with priority
+                [4] Suggestions with specific order
+                [5] Back
                 """);
     }
 
     private void printSuggestions(ArrayList<Connection> suggestion,String string) {
         System.out.println(">>>>> "+string+" <<<<<");
         for (Connection c:suggestion){
-            System.out.println(c.getUser().toString());
-            System.out.println("------------------------------------------");
+           // System.out.println(c.getUser().toString());
+            System.out.println("ID : "+c.getUser().getId());
+            System.out.println("-------------------");
         }
     }
 
     private void printUserInformation(){
         System.out.println("===================================");
-        System.out.println(currentUser.toString());
+        System.out.println(currentUser.getElement().toString());
         System.out.println("===================================");
 
     }
@@ -134,7 +129,7 @@ public class LinkedInPanel {
             String[] string = specialties.split(" ");
             List<String> list = new ArrayList<>(List.of(string));
 
-            User newUser = new User(id, name, LocalDate.parse(birth, formatter), universityLocation, field, workplace, list, null);
+            User newUser = new User(id, name, birth, universityLocation, field, workplace, list, null);
             graph.insertVertex(newUser);
 
             System.out.println("You Signup Successfully!");

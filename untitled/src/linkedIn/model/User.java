@@ -8,7 +8,7 @@ public class User {
     //---------------- Field -------------------------
     private String id;
     private String name;
-    private LocalDate dateOfBirth;
+    private String dateOfBirth;
     //-------------------
     private String universityLocation;
     private String field;
@@ -20,7 +20,7 @@ public class User {
 
     //---------------- Constructor -------------------------
 
-    public User(String id, String name, LocalDate dateOfBirth, String universityLocation, String field, String workplace, List<String> specialties, Set<String> connectionId) {
+    public User(String id, String name, String dateOfBirth, String universityLocation, String field, String workplace, List<String> specialties, Set<String> connectionId) {
         this.id = id;
         this.name = name;
         this.dateOfBirth = dateOfBirth;
@@ -50,11 +50,11 @@ public class User {
         this.name = name;
     }
 
-    public LocalDate getDateOfBirth() {
+    public String getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(LocalDate dateOfBirth) {
+    public void setDateOfBirth(String dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
